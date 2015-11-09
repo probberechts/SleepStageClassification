@@ -10,25 +10,27 @@ import getopt
 import numpy as np
 from data import loadData, groupByEpoch
 from models import createNormalizedDataframe, savePredictions
-from featureConstruction import dictionaryInitialization, dico_construction
+from feature_construction import dictionaryInitialization, dico_construction
 from sklearn.externals import joblib
 import matplotlib.pyplot as plt
+import edr
 
 
 def classify(inputfile='slpdb.mat', epoch_length=30, make_plot=True, save=True, outputfile='classify.txt'):
     # Load datas
     dataset = loadData(inputfile)
-    X = groupByEpoch(dataset['ECG'], 250, epoch_length)
+    ECG = groupByEpoch(dataset['ECG'], 250, epoch_length)
+    Resp_in, Resp_out = edr.main(dataset)
 
     # Feature dictionary construction
     d_test = dictionaryInitialization()
-    d_test = dico_construction(X, d_test)
+    d_test = dico_construction(ECG, Resp_in, Resp_out, d_test)
     Xarr_norm = createNormalizedDataframe(d_test)
 
     # Predecition
     model = joblib.load('model.pkl')
     pred_res = list()
-    for j in range(0, len(X)):
+    for j in range(0, len(ECG)):
         l = str(model.predict(Xarr_norm[j])[0])
         pred_res.append(l)
 

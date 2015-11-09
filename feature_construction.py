@@ -5,7 +5,8 @@ Construct a dictionary with all features.
 @author: Pieter
 """
 
-from ECGutils import ECGFeatures
+from ecg_features import ECGFeatures
+from resp_features import RespFeatures
 
 
 def dictionaryInitialization():
@@ -35,14 +36,21 @@ def dictionaryInitialization():
         'freq1': list(),
         'freq2': list(),
         'freq3': list(),
+        'mean_rin': list(),
+        'std_rin': list(),
+        'CV_rin': list(),
+        'mean_rout': list(),
+        'std_rout': list(),
+        'CV_rout': list(),
     }
     return d
 
 
-def dico_construction(X, dd):
+def dico_construction(ECG, Resp_in, Resp_out, dd):
     d = dd
-    for i in range(0, len(X)):
-        fea = ECGFeatures(X[i], 250)
+
+    for i in range(0, len(ECG)):
+        fea = ECGFeatures(ECG[i], 250)
         d['mean'].append(fea.mean)
         d['std'].append(fea.std)
         d['CV'].append(fea.CV)
@@ -68,6 +76,19 @@ def dico_construction(X, dd):
         d['freq1'].append(fea.freq1)
         d['freq2'].append(fea.freq2)
         d['freq3'].append(fea.freq3)
+
+    for i in range(0, len(Resp_in)):
+        fea = RespFeatures(Resp_in[i], 250)
+        d['mean_rin'].append(fea.mean)
+        d['std_rin'].append(fea.std)
+        d['CV_rin'].append(fea.CV)
+
+    for i in range(0, len(Resp_out)):
+        fea = RespFeatures(Resp_in[i], 250)
+        d['mean_rout'].append(fea.mean)
+        d['std_rout'].append(fea.std)
+        d['CV_rout'].append(fea.CV)
+
     return d
 
 '''

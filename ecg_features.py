@@ -16,7 +16,7 @@ class ECGFeatures:
 
     def __init__(self, raw_signal, fs=250):
         self.raw_signal = raw_signal
-        [_, self.filtered, _, _, _, heart_rate_ts, self.heart_rate] =\
+        [_, self.filtered, self.peaks, _, _, heart_rate_ts, self.heart_rate] =\
             ecg.ecg(signal=raw_signal.squeeze(), sampling_rate=fs, show=False)
         self.hrv = heart_rate_ts[1:-1] - heart_rate_ts[0:-2]
 

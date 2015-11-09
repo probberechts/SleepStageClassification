@@ -8,18 +8,20 @@ Evaluates performance of different classifiers.
 import numpy as np
 from sklearn.cross_validation import train_test_split
 from data import loadData, groupByEpoch
-from featureConstruction import dictionaryInitialization, dico_construction
+from feature_construction import dictionaryInitialization, dico_construction
 from models import listModels, createNormalizedDataframe
+from edr import main
 
 mat_file = 'slpdb.mat'
 
 # Load datas
 dataset = loadData(mat_file)
-X = groupByEpoch(dataset['ECG'])
+ECG = groupByEpoch(dataset['ECG'])
+Resp_in, Resp_out = main(dataset)
 
 # Train dictionary construction
 d_train = dictionaryInitialization()
-d_train = dico_construction(X, d_train)
+d_train = dico_construction(ECG, Resp_in, Resp_out, d_train)
 y = np.array(dataset['binarylabels'])
 Xarr_norm = createNormalizedDataframe(d_train)
 
